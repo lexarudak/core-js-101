@@ -357,9 +357,25 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arr = ccn.toString().split('').reverse();
+  const reverseNumArr = arr.map((val) => Number(val));
+  const sum = reverseNumArr.reduce((acc, val, index) => {
+    if (index % 2 === 0) {
+      return acc + val;
+    }
+    let a = val * 2;
+    if (a.toString().length > 1) {
+      a -= 9;
+    }
+    return acc + a;
+  }, 0);
+  if (sum % 10 === 0) {
+    return true;
+  }
+  return false;
 }
+
 
 /**
  * Returns the digital root of integer:
@@ -388,7 +404,6 @@ function getDigitalRoot(num) {
   const a = xxx(num);
   return a;
 }
-// console.log(getDigitalRoot(12345));
 
 
 /**
@@ -412,10 +427,28 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
-}
+function isBracketsBalanced(str) {
+  const open = ['[', '(', '{', '<'];
+  const close = [']', ')', '}', '>'];
+  const openBracket = [];
+  let i = 0;
 
+  while (i < str.length) {
+    if (open.includes(str[i])) {
+      openBracket.push(str[i]);
+    }
+    if (close.includes(str[i])) {
+      if (open.indexOf(openBracket.pop()) !== close.indexOf(str[i])) {
+        return false;
+      }
+    }
+    i += 1;
+  }
+  if (openBracket.length === 0) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * Returns the string with n-ary (binary, ternary, etc, where n <= 10)
