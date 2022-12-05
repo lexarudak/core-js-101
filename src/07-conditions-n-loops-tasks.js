@@ -470,8 +470,18 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  let number = num;
+  const arr = [];
+
+  while (number >= n) {
+    arr.push(number % n);
+    number = (number - (number % n)) / n;
+    if (number < n) {
+      arr.push(number);
+    }
+  }
+  return arr.reverse().join('');
 }
 
 
@@ -487,9 +497,24 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const newArr = pathes.map((val) => val.replaceAll('/', '/*').split('*'));
+  let ans = [...newArr[0]];
+  newArr.forEach((val, ind) => {
+    if (ind !== 0) {
+      val.forEach((element, index) => {
+        if (ans[index]) {
+          if (element !== ans[index]) {
+            ans = ans.slice(0, index);
+          }
+        }
+      });
+    }
+  });
+  return ans.join('');
 }
+
+// console.log(getCommonDirectoryPath(['/web/images/image1.png', '/web/images/image2.png']));
 
 
 /**
@@ -508,10 +533,36 @@ function getCommonDirectoryPath(/* pathes */) {
  *                        [[ 4 ],
  *   [[ 1, 2, 3]]    X     [ 5 ],          =>     [[ 32 ]]
  *                         [ 6 ]]
- *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  if (m1[0].length !== m2.length) {
+    return false;
+  }
+  let i = 0;
+  let rowI = 0;
+  let columnI = 0;
+  let sum = 0;
+  const matrix = [];
+  let miniArr = [];
+  while (rowI < m1.length) {
+    sum += m1[rowI][i] * m2[i][columnI];
+    i += 1;
+    if (i === m1[0].length) {
+      i = 0;
+      columnI += 1;
+      if (sum > 0) {
+        miniArr.push(sum);
+      }
+      sum = 0;
+      if (columnI === m2.length) {
+        columnI = 0;
+        rowI += 1;
+        matrix.push(miniArr);
+        miniArr = [];
+      }
+    }
+  }
+  return matrix;
 }
 
 
@@ -545,9 +596,33 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let answer;
+  position.forEach((val) => {
+    if (val[0] === val[1] && val[0] === val[2]) {
+      const [a] = val;
+      answer = a;
+    }
+  });
+  position[0].forEach((val, index) => {
+    if (val === position[1][index] && val === position[2][index]) {
+      answer = val;
+    }
+  });
+  if (position[0][0] === position[1][1] && position[0][0] === position[2][2]) {
+    const [[a]] = position;
+    answer = a;
+  }
+  if (position[0][2] === position[1][1] && position[0][2] === position[2][0]) {
+    const [, , [a]] = position;
+    answer = a;
+  }
+  return answer;
 }
+// console.log(evaluateTicTacToePosition([
+//    [   ,   ,'0'],
+//    ['0',   ,'0'],
+//    ['X','X','X']]));
 
 
 module.exports = {
